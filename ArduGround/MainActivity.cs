@@ -11,9 +11,14 @@ namespace ArduGround
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+            FindViewById<Button>(Resource.Id.ConnetButton).Click += ConnetButton_Click;
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
+        }
+
+        private void ConnetButton_Click(object sender, System.EventArgs e)
+        {
+           
         }
     }
 }
