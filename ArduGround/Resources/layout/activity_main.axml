@@ -61,12 +61,12 @@
         android:layout_height="wrap_content"
         android:text="연결"
         android:id="@+id/ConnetButton"
-        android:textSize="20" />
+        android:textSize="20dp" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="자살"
         android:id="@+id/DieButton"
         android:layout_marginBottom="20dp"
-        android:textSize="20" />
+        android:textSize="20dp" />
 </LinearLayout>
