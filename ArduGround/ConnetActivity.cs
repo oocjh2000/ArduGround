@@ -11,10 +11,12 @@ namespace ArduGround
     [Activity(Label = "ConnetActivity")]
     public class ConnetActivity : Activity
     {
-        private object li;
+        private readonly IDialogInterfaceOnClickListener listener;
         ListView listView;
         Button SearchButton;
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+        private int items;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -55,8 +57,9 @@ namespace ArduGround
                     vs.Add(dv.Name);
                 }
                 vs.Add("Cancel");
-                string items = vs.ToString();
-               // builder.SetItems(items.ToCharArray(),new IDialogInterfaceOnClickListener)
+               
+                builder.SetItems(items, listener);
+     
                     
                
               
