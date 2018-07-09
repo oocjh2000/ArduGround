@@ -5,13 +5,17 @@ using System;
 using Android.Bluetooth;
 using Android.Content;
 using System.Collections.Generic;
+using Android.Util;
+using Java.Util;
+
 
 namespace ArduGround
 {
     [Activity(Label = "ConnetActivity")]
     public class ConnetActivity : Activity
     {
-        private readonly IDialogInterfaceOnClickListener listener;
+
+        ICollection<BluetoothDevice> mDevice;
         ListView listView;
         Button SearchButton;
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
@@ -26,12 +30,24 @@ namespace ArduGround
             listView.ItemClick += ListView_ItemClick;
             SearchButton = FindViewById<Button>(Resource.Id.Search);
             SearchButton.Click += SearchButton_Click;
+
             // Create your application here
+        }
+
+       BluetoothDevice GetBluetoothDevice(string Name)
+        {
+            BluetoothDevice Selecteddevice = null;
+          foreach(BluetoothDevice device in mDevice)
+            {
+                Selecteddevice = device;
+            }
+            return Selecteddevice;
         }
 
         private void ListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            
+            UUID Serial = UUID.FromString("00001101 - 0000 - 1000 - 8000 - 00805F9B34FB");
+        
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
@@ -44,7 +60,7 @@ namespace ArduGround
             else {
                 if (bluetoothAdapter.BondedDevices.Count > 0)
                 {
-                    var mDevice = bluetoothAdapter.BondedDevices;
+                    mDevice = bluetoothAdapter.BondedDevices;
                     List<string>items=new List<string>();
                     foreach(BluetoothDevice device in mDevice)
                     {
