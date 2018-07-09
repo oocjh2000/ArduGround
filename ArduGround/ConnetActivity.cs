@@ -15,7 +15,6 @@ namespace ArduGround
         ListView listView;
         Button SearchButton;
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-        private int items;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -37,34 +36,12 @@ namespace ArduGround
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             if (!bluetoothAdapter.IsEnabled)
             {
-                if (bluetoothAdapter.Enable()) { }
-                else Finish();
+                var Btintent = new Intent(BluetoothAdapter.ActionRequestEnable);
+                StartActivity(Btintent);
             }
-            else
-            {
-              ICollection<BluetoothDevice> bluetoothDevice = bluetoothAdapter.BondedDevices;
-                if (bluetoothDevice.Count == 0)
-                    Finish();
-             
-                builder.SetTitle("Set Your Device");
-
-                List<string> vs = new List<string>();
-                foreach(BluetoothDevice dv in bluetoothDevice)
-                {
-                    vs.Add(dv.Name);
-                }
-                vs.Add("Cancel");
-               
-                builder.SetItems(items, listener);
-     
-                    
-               
-              
-            }
-            AlertDialog alert = builder.Create();
+            
         }
     }
 }
