@@ -41,6 +41,22 @@ namespace ArduGround
                 var Btintent = new Intent(BluetoothAdapter.ActionRequestEnable);
                 StartActivity(Btintent);
             }
+            else {
+                if (bluetoothAdapter.BondedDevices.Count > 0)
+                {
+                    var mDevice = bluetoothAdapter.BondedDevices;
+                    List<string>items=new List<string>();
+                    foreach(BluetoothDevice device in mDevice)
+                    {
+                        items.Add(device.Name);
+                    }
+                    listView.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, items);
+                }
+                else
+                {
+
+                }
+            }
             
         }
     }
