@@ -21,6 +21,7 @@ namespace ArduGround
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
         BluetoothSocket mSocket;
         Toast toast;
+        List<string> items;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -53,28 +54,30 @@ namespace ArduGround
         {
             var mRemoteDevice = GetBluetoothDevice(DeviceName);
             var DeviceCount = mDevice.Count;
-            UUID Serial = UUID.FromString("00001101 - 0000 - 1000 - 8000 - 00805F9B34FB");
+            UUID Serial = UUID.FromString("00001101-0000-1000-8000-00805F9B34FB");
             try
             {
+                
                 mSocket = mRemoteDevice.CreateInsecureRfcommSocketToServiceRecord(Serial);
                 mSocket.Connect();
 
                 var mOutputStream = mSocket.OutputStream;
                 var mInputStream = mSocket.InputStream;
-                
+                toast = Toast.MakeText(this, "연결성공", ToastLength.Short);
+                toast.Show();
+
             }
             catch
             {
-                toast = Toast.MakeText(this, "띠요옹 알수없는 오류인데스웅", ToastLength.Short);
+                toast = Toast.MakeText(this, "연결실패", ToastLength.Short);
                 toast.Show();
-
             }
 
 
         }
         private void ListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-           
+            ConnetToSelectedDevice(items[e.Position]);
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
@@ -93,7 +96,7 @@ namespace ArduGround
                     toast.Show();
 
                     mDevice = bluetoothAdapter.BondedDevices;
-                    List<string>items=new List<string>();
+                   items=new List<string>();
                     foreach(BluetoothDevice device in mDevice)
                     {
                         items.Add(device.Name);
@@ -104,7 +107,6 @@ namespace ArduGround
                 {
                     toast = Toast.MakeText(this, "페어링된 장치가 없음", ToastLength.Short);
                     toast.Show();
-
                 }
             }
             
