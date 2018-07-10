@@ -19,6 +19,8 @@ namespace ArduGround
         ListView listView;
         Button SearchButton;
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+        BluetoothSocket mSocket;
+        Toast toast;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -39,27 +41,57 @@ namespace ArduGround
             BluetoothDevice Selecteddevice = null;
           foreach(BluetoothDevice device in mDevice)
             {
-                Selecteddevice = device;
+                if (Name.Equals(device.Name))
+                {
+                    Selecteddevice = device;
+                    break;
+                }
             }
             return Selecteddevice;
         }
+        void ConnetToSelectedDevice(string DeviceName)
+        {
+            var mRemoteDevice = GetBluetoothDevice(DeviceName);
+            var DeviceCount = mDevice.Count;
+            UUID Serial = UUID.FromString("00001101 - 0000 - 1000 - 8000 - 00805F9B34FB");
+            try
+            {
+                mSocket = mRemoteDevice.CreateInsecureRfcommSocketToServiceRecord(Serial);
+                mSocket.Connect();
 
+                var mOutputStream = mSocket.OutputStream;
+                var mInputStream = mSocket.InputStream;
+                
+            }
+            catch
+            {
+                toast = Toast.MakeText(this, "띠요옹 알수없는 오류인데스웅", ToastLength.Short);
+                toast.Show();
+
+            }
+
+
+        }
         private void ListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            UUID Serial = UUID.FromString("00001101 - 0000 - 1000 - 8000 - 00805F9B34FB");
-        
+           
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
             if (!bluetoothAdapter.IsEnabled)
             {
+                toast = Toast.MakeText(this, "블루투스 활성화", ToastLength.Short);
+                toast.Show();
                 var Btintent = new Intent(BluetoothAdapter.ActionRequestEnable);
                 StartActivity(Btintent);
             }
             else {
                 if (bluetoothAdapter.BondedDevices.Count > 0)
                 {
+                    toast = Toast.MakeText(this, "페어링된 장치목록", ToastLength.Short);
+                    toast.Show();
+
                     mDevice = bluetoothAdapter.BondedDevices;
                     List<string>items=new List<string>();
                     foreach(BluetoothDevice device in mDevice)
@@ -70,6 +102,8 @@ namespace ArduGround
                 }
                 else
                 {
+                    toast = Toast.MakeText(this, "페어링된 장치가 없음", ToastLength.Short);
+                    toast.Show();
 
                 }
             }
