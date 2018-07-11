@@ -7,7 +7,9 @@ using Android.Content;
 using System.Collections.Generic;
 using Android.Util;
 using Java.Util;
-
+using System.Threading;
+using Java.Lang;
+using System.IO;
 
 namespace ArduGround
 {
@@ -16,12 +18,18 @@ namespace ArduGround
     {
 
         ICollection<BluetoothDevice> mDevice;
+        System.Threading.Thread Worker;
         ListView listView;
         Button SearchButton;
+
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
         BluetoothSocket mSocket;
         Toast toast;
+
         List<string> items;
+
+        Stream mOutputStream;
+        Stream mInputStream
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -61,15 +69,22 @@ namespace ArduGround
                 mSocket = mRemoteDevice.CreateInsecureRfcommSocketToServiceRecord(Serial);
                 mSocket.Connect();
 
-                var mOutputStream = mSocket.OutputStream;
-                var mInputStream = mSocket.InputStream;
+                 mOutputStream = mSocket.OutputStream;
+                 mInputStream = mSocket.InputStream;
                 toast = Toast.MakeText(this, "연결성공", ToastLength.Short);
                 toast.Show();
 
+                Handler hendler = new Handler();
+
+                var readBuffer = new byte[1024];
+                int BufferPos = 0;
+
+               Worker = new System.Threading.Thread(new ThreadStart(Listen));
+
             }
-            catch
+            catch(System.Exception e)
             {
-                toast = Toast.MakeText(this, "연결실패", ToastLength.Short);
+                toast = Toast.MakeText(this, e.Message, ToastLength.Short);
                 toast.Show();
             }
 
@@ -111,5 +126,19 @@ namespace ArduGround
             }
             
         }
-    }
-}
+        void Listen()
+        {
+            while (System.Threading.Thread.CurrentThread.IsAlive)
+            {
+                long byteAvailable = mInputStream.Length;
+                if (byteAvailable>0)
+                {
+                    byte[] packetByte = new byte[byteAvailable];
+                    mInputStream.Read(packetByte);
+                }
+            }
+
+        }
+       
+    }//클래스
+}//네임스페이스
