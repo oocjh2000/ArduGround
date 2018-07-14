@@ -3,6 +3,7 @@ using Android.Widget;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Content;
+using System.Threading;
 
 namespace ArduGround
 {
@@ -10,6 +11,7 @@ namespace ArduGround
     public class MainActivity : AppCompatActivity
     {
         Toast toast;
+        public static int HP = 100;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -18,13 +20,31 @@ namespace ArduGround
             SetContentView(Resource.Layout.activity_main);
             FindViewById<Button>(Resource.Id.ConnetButton).Click += ConnetButton_Click;
             FindViewById<Button>(Resource.Id.DieButton).Click += MainActivity_Click;
+            FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
+            FindViewById<Button>(Resource.Id.refreshbutton).Click += REFRESH;
 
+        }
+
+
+
+   
+
+        void REFRESH(object sender, System.EventArgs e)
+        {
+            FindViewById<TextView>(Resource.Id.ShowHelth).Text = MainActivity.HP.ToString();
+            if (HP < 0)
+            {
+                toast = Toast.MakeText(this, "사망", ToastLength.Short);
+                toast.Show();
+            }
         }
 
         private void MainActivity_Click(object sender, System.EventArgs e)
         {
-            toast = Toast.MakeText(this, "미구현기능", ToastLength.Short);
+            toast = Toast.MakeText(this, "사망", ToastLength.Short);
             toast.Show();
+            HP = 0;
+            FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
         }
 
         private void ConnetButton_Click(object sender, System.EventArgs e)
@@ -32,6 +52,7 @@ namespace ArduGround
            
             StartActivity(typeof(ConnetActivity));
         }
+        
     }
 }
 

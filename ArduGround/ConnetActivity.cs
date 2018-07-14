@@ -29,7 +29,7 @@ namespace ArduGround
         List<string> items;
 
         Stream mOutputStream;
-        Stream mInputStream
+        Stream mInputStream;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -76,10 +76,11 @@ namespace ArduGround
 
                 Handler hendler = new Handler();
 
-                var readBuffer = new byte[1024];
-                int BufferPos = 0;
+           
 
-               Worker = new System.Threading.Thread(new ThreadStart(Listen));
+               Worker = new System.Threading.Thread(new ThreadStart(run));
+               Worker.Start();
+                
 
             }
             catch(System.Exception e)
@@ -126,16 +127,20 @@ namespace ArduGround
             }
             
         }
-        void Listen()
+        void run()
         {
+            int buffer;
+            
             while (System.Threading.Thread.CurrentThread.IsAlive)
             {
-                long byteAvailable = mInputStream.Length;
-                if (byteAvailable>0)
+                if (mInputStream.IsDataAvailable())
                 {
-                    byte[] packetByte = new byte[byteAvailable];
-                    mInputStream.Read(packetByte);
+                    MainActivity.HP--;
+                    buffer=mInputStream.ReadByte();
+                   
+
                 }
+              
             }
 
         }
