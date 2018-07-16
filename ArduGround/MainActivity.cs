@@ -12,6 +12,7 @@ namespace ArduGround
     {
         Toast toast;
         public static int HP = 100;
+        BackPressCloseHandler closeHandler;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -22,6 +23,8 @@ namespace ArduGround
             FindViewById<Button>(Resource.Id.DieButton).Click += MainActivity_Click;
             FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
             FindViewById<Button>(Resource.Id.refreshbutton).Click += REFRESH;
+
+            closeHandler = new BackPressCloseHandler(this);
 
         }
 
@@ -41,10 +44,8 @@ namespace ArduGround
 
         private void MainActivity_Click(object sender, System.EventArgs e)
         {
-            toast = Toast.MakeText(this, "사망", ToastLength.Short);
-            toast.Show();
-            HP = 0;
-            FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
+
+            closeHandler.OnBackPressed();
         }
 
         private void ConnetButton_Click(object sender, System.EventArgs e)
