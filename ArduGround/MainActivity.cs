@@ -13,6 +13,8 @@ namespace ArduGround
         Toast toast;
         public static int HP = 100;
         BackPressCloseHandler closeHandler;
+        Handler handler = new Handler();
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -22,15 +24,27 @@ namespace ArduGround
             FindViewById<Button>(Resource.Id.ConnetButton).Click += ConnetButton_Click;
             FindViewById<Button>(Resource.Id.DieButton).Click += MainActivity_Click;
             FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
-            FindViewById<Button>(Resource.Id.refreshbutton).Click += REFRESH;
+            
+
+            var mth = new Thread(new ThreadStart(RefreshThread));
+            mth.Start();
 
             closeHandler = new BackPressCloseHandler(this);
 
         }
 
-
-
-   
+        void RefreshThread()
+        {
+            while (Thread.CurrentThread.IsAlive)
+            {
+                HP--;
+                handler.Post(delegate ()
+                {
+                    FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
+                });
+                Thread.Sleep(1000);
+            }
+        }
 
         void REFRESH(object sender, System.EventArgs e)
         {
