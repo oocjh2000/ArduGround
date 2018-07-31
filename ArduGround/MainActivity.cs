@@ -37,11 +37,7 @@ namespace ArduGround
         {
             while (Thread.CurrentThread.IsAlive)
             {
-                HP--;
-                handler.Post(delegate ()
-                {
-                    FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
-                });
+                handler.Post(delegate () { FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString(); });
                 Thread.Sleep(1000);
             }
         }

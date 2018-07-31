@@ -16,7 +16,7 @@ namespace ArduGround
     [Activity(Label = "ConnetActivity")]
     public class ConnetActivity : Activity
     {
-
+        
         ICollection<BluetoothDevice> mDevice;
         System.Threading.Thread Worker;
         ListView listView;
@@ -78,7 +78,23 @@ namespace ArduGround
 
            
 
-               Worker = new System.Threading.Thread(new ThreadStart(run));
+               Worker = new System.Threading.Thread(new ThreadStart(delegate() {
+                   {
+                       int buffer;
+
+                       while (System.Threading.Thread.CurrentThread.IsAlive)
+                       {
+                           if (mInputStream.IsDataAvailable())
+                           {
+                               buffer = mInputStream.ReadByte();
+                               System.Threading.Thread.Sleep(500);
+
+                           }
+
+                       }
+
+                   }
+               }));
                Worker.Start();
                 
 
@@ -127,23 +143,5 @@ namespace ArduGround
             }
             
         }
-        void run()
-        {
-            int buffer;
-            
-            while (System.Threading.Thread.CurrentThread.IsAlive)
-            {
-                if (mInputStream.IsDataAvailable())
-                {
-                    MainActivity.HP--;
-                    buffer=mInputStream.ReadByte();
-                   
-
-                }
-              
-            }
-
-        }
-       
     }//클래스
 }//네임스페이스
