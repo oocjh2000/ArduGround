@@ -4,16 +4,21 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Content;
 using System.Threading;
+using Java.Net;
 
 namespace ArduGround
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
     public class MainActivity : AppCompatActivity
     {
         Toast toast;
+
         public static int HP = 100;
+
         BackPressCloseHandler closeHandler;
+
         Handler handler = new Handler();
+
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -37,6 +42,7 @@ namespace ArduGround
         {
             while (Thread.CurrentThread.IsAlive)
             {
+                FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
                 handler.Post(delegate () { FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString(); });
                 Thread.Sleep(1000);
             }

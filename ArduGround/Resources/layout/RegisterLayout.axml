@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ServerIpView"
+        android:textSize="20dp"
+        android:text="서버 IP" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/UserIdView"
+        android:textSize="20dp"
+        android:text="사용자 이름" />
+    <Button
+        android:text="등록"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/RegisterButton" />
+</LinearLayout>
