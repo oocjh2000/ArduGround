@@ -2,21 +2,25 @@
 using Android.OS;
 using Android.Widget;
 using System;
-using Java.Net;
-using Org.Json;
-using Java.IO;
 using System.Text;
+using System.Threading;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using Android.Util;
 
 namespace ArduGround
 {
-    [Activity(Label = "Register", MainLauncher = true)]
+    [Activity(Label = "ArduGround", MainLauncher = true)]
     public class Register : Activity
     {
+       
         Button RegisterButton;
         TextView ServerAdress, UserName;
+        Handler handler = new Handler();
         Toast Toast;
-        public static int id;
-        public static string name;
+        public static Player player;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -26,70 +30,41 @@ namespace ArduGround
             RegisterButton = FindViewById<Button>(Resource.Id.RegisterButton);
             ServerAdress = FindViewById<TextView>(Resource.Id.ServerIpView);
             UserName = FindViewById<TextView>(Resource.Id.UserIdView);
+            ServerAdress.Text = "192.168.0.10";
+            RegisterButton.Click += RegisterButton_ClickAsync;
 
-            RegisterButton.Click += RegisterButton_Click;
-               
             // Create your application here
         }
 
-        private void RegisterButton_Click(object sender, EventArgs e)
-        {
-            register();
-        }
+  
 
-        private void register()
+        private async void RegisterButton_ClickAsync(object sender, EventArgs e)
         {
             try
             {
-                URL uRL = new URL(ServerAdress.Text);
-                HttpURLConnection connection = null;
+                player = new Player { name = UserName.Text, hp = 100 };
 
-                connection = (HttpURLConnection)uRL.OpenConnection();
-                connection.ConnectTimeout = 3000;
-                connection.ReadTimeout = 3000;
-                connection.RequestMethod = "POST";
-                connection.SetRequestProperty("Cache-Contril", "no-cache");
-                connection.SetRequestProperty("Content-Type", "application/json");
-                connection.SetRequestProperty("Accept", "application/json");
-                connection.AddRequestProperty("name", UserName.Text);
-                connection.DoInput = true;
-                connection.DoOutput = true;
+                var request = new HttpRequestMessage();
+                request.RequestUri = new Uri("http://" + ServerAdress.Text + "/users");
+                request.Method = HttpMethod.Post;
+                request.Headers.Add("Created", "application/json");
 
-                JSONObject jSONObject = new JSONObject();
-                jSONObject.Put("name", UserName.Text);
+                var content = new StringContent(JsonConvert.SerializeObject(player),Encoding.UTF8);
+                request.Content = content;
+                var client = new HttpClient();
+                HttpResponseMessage responseMessage = await client.PostAsync(request.RequestUri,request.Content);
 
-                connection.OutputStream.Write(Encoding.UTF8.GetBytes(jSONObject.ToString()));
-                connection.OutputStream.Flush();
-
-                string Res;
-
-#pragma warning disable CS0618 // 형식 또는 멤버는 사용되지 않습니다.
-                if (connection.ResponseCode == HttpURLConnection.HttpCreated)
-#pragma warning restore CS0618 // 형식 또는 멤버는 사용되지 않습니다.
-                {
-                    var input = connection.InputStream;
-                    var baos = new ByteArrayOutputStream();
-                    byte[] bytebuf = new byte[1024];
-                    byte[] bytedata = null;
-                    int nLength = 0;
-                    while ((nLength = input.Read(bytebuf, 0, bytebuf.Length)) != -1)
-                        baos.Write(bytebuf, 0, nLength);
-
-                    bytedata = baos.ToByteArray();
-
-                    Res = new string(bytedata.ToString());
-
-                    JSONObject responseObj = new JSONObject(Res);
-                    id = (int)responseObj.Get("id");
-                    name = (string)responseObj.Get("name");
-                }
-            }
-            catch(Exception e) {
-                Toast = Toast.MakeText(this, e.Message, ToastLength.Short);
+                Toast = Toast.MakeText(this, responseMessage.StatusCode.ToString(), ToastLength.Long);
                 Toast.Show();
-
+                
+            }catch(Exception ex)
+            {
+                Log.Debug("a", ex.Message);
+                Toast = Toast.MakeText(this, ex.Message, ToastLength.Long);
+                Toast.Show();
             }
-
+            
         }
+
     }
 }
