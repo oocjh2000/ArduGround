@@ -30,7 +30,7 @@ namespace ArduGround
             RegisterButton = FindViewById<Button>(Resource.Id.RegisterButton);
             ServerAdress = FindViewById<TextView>(Resource.Id.ServerIpView);
             UserName = FindViewById<TextView>(Resource.Id.UserIdView);
-            ServerAdress.Text = "192.168.0.10";
+            ServerAdress.Text = "211.225.140.135";
             RegisterButton.Click += RegisterButton_ClickAsync;
 
             // Create your application here
@@ -44,22 +44,24 @@ namespace ArduGround
             {
                 player = new Player { name = UserName.Text, hp = 100 };
 
+                var content = new StringContent(JsonConvert.SerializeObject(player), Encoding.UTF8);
                 var request = new HttpRequestMessage();
                 request.RequestUri = new Uri("http://" + ServerAdress.Text + "/users");
                 request.Method = HttpMethod.Post;
                 request.Headers.Add("Created", "application/json");
-
-                var content = new StringContent(JsonConvert.SerializeObject(player),Encoding.UTF8);
                 request.Content = content;
+                Log.Debug("Json", content.ToString());
+
                 var client = new HttpClient();
                 HttpResponseMessage responseMessage = await client.PostAsync(request.RequestUri,request.Content);
 
+                Log.Debug("Json", content.ToString());
                 Toast = Toast.MakeText(this, responseMessage.StatusCode.ToString(), ToastLength.Long);
                 Toast.Show();
                 
             }catch(Exception ex)
             {
-                Log.Debug("a", ex.Message);
+                Log.Debug("Exeption", ex.Message);
                 Toast = Toast.MakeText(this, ex.Message, ToastLength.Long);
                 Toast.Show();
             }
