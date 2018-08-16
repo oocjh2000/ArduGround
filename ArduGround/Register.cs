@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Android.Util;
+using Android.Content;
 
 namespace ArduGround
 {
-    [Activity(Label = "ArduGround", MainLauncher = true)]
+    [Activity(Label = "ArduGround")]
     public class Register : Activity
     {
-       
+        BackPressCloseHandler backPressCloseHandler;
         Button RegisterButton;
         TextView ServerAdress, UserName;
         Handler handler = new Handler();
@@ -32,33 +33,47 @@ namespace ArduGround
             UserName = FindViewById<TextView>(Resource.Id.UserIdView);
             ServerAdress.Text = "211.225.140.135";
             RegisterButton.Click += RegisterButton_ClickAsync;
+            backPressCloseHandler = new BackPressCloseHandler(this);
 
             // Create your application here
         }
+        public override void OnBackPressed()
+        {
+            backPressCloseHandler.OnBackPressed();
+        }
 
-  
 
         private async void RegisterButton_ClickAsync(object sender, EventArgs e)
         {
             try
             {
-                player = new Player { name = UserName.Text, hp = 100 };
-
-                var content = new StringContent(JsonConvert.SerializeObject(player), Encoding.UTF8);
+                player = new Player() { name = UserName.Text, hp = 100 };
+                string tmp = JsonConvert.SerializeObject(player);
+                var content = new StringContent(JsonConvert.SerializeObject(player), Encoding.UTF8, "application/json");
                 var request = new HttpRequestMessage();
                 request.RequestUri = new Uri("http://" + ServerAdress.Text + "/users");
-                request.Method = HttpMethod.Post;
-                request.Headers.Add("Created", "application/json");
                 request.Content = content;
-                Log.Debug("Json", content.ToString());
+                //request.Content.Headers.Add("Content-Type", "");
+                
 
+                
+
+              
                 var client = new HttpClient();
-                HttpResponseMessage responseMessage = await client.PostAsync(request.RequestUri,request.Content);
+                HttpResponseMessage responseMessage = await client.PostAsync(request.RequestUri, request.Content);
+              
+                player = JsonConvert.DeserializeObject<Player>(await responseMessage.Content.ReadAsStringAsync());
 
-                Log.Debug("Json", content.ToString());
+               
                 Toast = Toast.MakeText(this, responseMessage.StatusCode.ToString(), ToastLength.Long);
                 Toast.Show();
                 
+                if (responseMessage.StatusCode == System.Net.HttpStatusCode.Created)
+                {
+                    Intent intent = new Intent(this, typeof(MainActivity));
+                    intent.SetFlags(ActivityFlags.NoHistory);
+                    StartActivity(intent);
+                }
             }catch(Exception ex)
             {
                 Log.Debug("Exeption", ex.Message);

@@ -31,6 +31,8 @@ namespace ArduGround
         Stream mOutputStream;
         Stream mInputStream;
 
+        BackPressCloseHandler backPress;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -41,11 +43,15 @@ namespace ArduGround
             listView.ItemClick += ListView_ItemClick;
             SearchButton = FindViewById<Button>(Resource.Id.Search);
             SearchButton.Click += SearchButton_Click;
+            backPress = new BackPressCloseHandler(this);
 
             // Create your application here
         }
-
-       BluetoothDevice GetBluetoothDevice(string Name)
+        public override void OnBackPressed()
+        {
+            backPress.OnBackPressed();
+        }
+        BluetoothDevice GetBluetoothDevice(string Name)
         {
             BluetoothDevice Selecteddevice = null;
           foreach(BluetoothDevice device in mDevice)
@@ -104,7 +110,9 @@ namespace ArduGround
                 toast = Toast.MakeText(this, e.Message, ToastLength.Short);
                 toast.Show();
             }
-
+            var intent = new Intent(this, typeof(Register));
+            intent.SetFlags(ActivityFlags.NoHistory);
+            StartActivity(intent);
 
         }
         private void ListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)

@@ -8,7 +8,7 @@ using Java.Net;
 
 namespace ArduGround
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme",MainLauncher =true)]
     public class MainActivity : AppCompatActivity
     {
         Toast toast;
@@ -16,6 +16,7 @@ namespace ArduGround
         public static int HP = 100;
 
         BackPressCloseHandler closeHandler;
+        BackPressCloseHandler backPress;
 
         Handler handler = new Handler();
 
@@ -29,20 +30,22 @@ namespace ArduGround
             FindViewById<Button>(Resource.Id.ConnetButton).Click += ConnetButton_Click;
             FindViewById<Button>(Resource.Id.DieButton).Click += MainActivity_Click;
             FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
-            
 
+            backPress = new BackPressCloseHandler(this);
             var mth = new Thread(new ThreadStart(RefreshThread));
             mth.Start();
 
             closeHandler = new BackPressCloseHandler(this);
 
         }
-
+        public override void OnBackPressed()
+        {
+            backPress.OnBackPressed();
+        }
         void RefreshThread()
         {
             while (Thread.CurrentThread.IsAlive)
             {
-                FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
                 handler.Post(delegate () { FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString(); });
                 Thread.Sleep(1000);
             }

@@ -33,7 +33,7 @@ namespace ArduGround
         }
         public void ShowGuide()
         {
-            toast = Toast.MakeText(activity, "한번더누르면 자살", ToastLength.Short);
+            toast = Toast.MakeText(activity, "한번더누르면 종료", ToastLength.Short);
             toast.Show();
         }
     }
