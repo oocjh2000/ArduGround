@@ -13,7 +13,7 @@ using System.IO;
 
 namespace ArduGround
 {
-    [Activity(Label = "ConnetActivity")]
+    [Activity(Label = "ArduGround", MainLauncher =true)]
     public class ConnetActivity : Activity
     {
         
