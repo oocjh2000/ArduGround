@@ -102,7 +102,10 @@ namespace ArduGround
                    }
                }));
                Worker.Start();
-                
+
+                var intent = new Intent(this, typeof(Register));
+                intent.SetFlags(ActivityFlags.NoHistory);
+                StartActivity(intent);
 
             }
             catch(System.Exception e)
@@ -110,9 +113,7 @@ namespace ArduGround
                 toast = Toast.MakeText(this, e.Message, ToastLength.Short);
                 toast.Show();
             }
-            var intent = new Intent(this, typeof(Register));
-            intent.SetFlags(ActivityFlags.NoHistory);
-            StartActivity(intent);
+            
 
         }
         private void ListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
