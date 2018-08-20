@@ -13,7 +13,7 @@ namespace ArduGround
     {
         Toast toast;
 
-        public static int HP = 100;
+        
 
         BackPressCloseHandler closeHandler;
         BackPressCloseHandler backPress;
@@ -29,7 +29,7 @@ namespace ArduGround
             SetContentView(Resource.Layout.activity_main);
          
             FindViewById<Button>(Resource.Id.DieButton).Click += MainActivity_Click;
-            FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString();
+            FindViewById<TextView>(Resource.Id.ShowHelth).Text = Register.player.hp.ToString();
             FindViewById<TextView>(Resource.Id.ShowUsername).Text = Register.player.name;
 
             backPress = new BackPressCloseHandler(this);
@@ -47,18 +47,8 @@ namespace ArduGround
         {
             while (Thread.CurrentThread.IsAlive)
             {
-                handler.Post(delegate () { FindViewById<TextView>(Resource.Id.ShowHelth).Text = HP.ToString(); });
+                handler.Post(delegate () { FindViewById<TextView>(Resource.Id.ShowHelth).Text = Register.player.hp.ToString(); });
                 Thread.Sleep(1000);
-            }
-        }
-
-        void REFRESH(object sender, System.EventArgs e)
-        {
-            FindViewById<TextView>(Resource.Id.ShowHelth).Text = MainActivity.HP.ToString();
-            if (HP < 0)
-            {
-                toast = Toast.MakeText(this, "사망", ToastLength.Short);
-                toast.Show();
             }
         }
 

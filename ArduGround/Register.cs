@@ -21,6 +21,7 @@ namespace ArduGround
         TextView ServerAdress, UserName;
         Handler handler = new Handler();
         Toast Toast;
+        public static string serverUrl;
         public static Player player;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -54,11 +55,11 @@ namespace ArduGround
                 request.RequestUri = new Uri("http://" + ServerAdress.Text + "/users");
                 request.Content = content;
                 //request.Content.Headers.Add("Content-Type", "");
-                
 
-                
 
-              
+
+
+                serverUrl = ServerAdress.Text;
                 var client = new HttpClient();
                 HttpResponseMessage responseMessage = await client.PostAsync(request.RequestUri, request.Content);
               

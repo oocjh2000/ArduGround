@@ -5,11 +5,12 @@ using System;
 using Android.Bluetooth;
 using Android.Content;
 using System.Collections.Generic;
-using Android.Util;
 using Java.Util;
 using System.Threading;
-using Java.Lang;
 using System.IO;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace ArduGround
 {
@@ -84,7 +85,7 @@ namespace ArduGround
 
            
 
-               Worker = new System.Threading.Thread(new ThreadStart(delegate() {
+               Worker = new System.Threading.Thread(new ThreadStart(async delegate () {
                    {
                        int buffer;
 
@@ -93,7 +94,16 @@ namespace ArduGround
                            if (mInputStream.IsDataAvailable())
                            {
                                buffer = mInputStream.ReadByte();
-                               System.Threading.Thread.Sleep(500);
+                               Register.player.hp--;
+                               HttpRequestMessage httpRequestMessage = new HttpRequestMessage();
+                               httpRequestMessage.RequestUri = new Uri("http://" + Register.serverUrl + "/users/" + Register.player.id.ToString());
+                               var content = new StringContent(JsonConvert.SerializeObject(Register.player), Encoding.UTF8, "application/json");
+                               httpRequestMessage.Content = content;
+                               HttpClient client = new HttpClient();
+                               HttpResponseMessage responseMessage = await client.PutAsync(httpRequestMessage.RequestUri, httpRequestMessage.Content);
+                               Register.player = JsonConvert.DeserializeObject<Player>(await responseMessage.Content.ReadAsStringAsync());
+                               httpRequestMessage.Method = HttpMethod.Put;
+                               Thread.Sleep(500);
 
                            }
 
