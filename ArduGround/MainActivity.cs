@@ -41,7 +41,7 @@ namespace ArduGround
         }
         public override void OnBackPressed()
         {
-            backPress.OnBackPressed();
+            backPress.OnBackPressedAsync();
         }
         void RefreshThread()
         {
@@ -55,7 +55,7 @@ namespace ArduGround
         private void MainActivity_Click(object sender, System.EventArgs e)
         {
 
-            closeHandler.OnBackPressed();
+            closeHandler.OnBackPressedAsync();
         }
 
         private void ConnetButton_Click(object sender, System.EventArgs e)

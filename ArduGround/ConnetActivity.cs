@@ -26,7 +26,7 @@ namespace ArduGround
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
         BluetoothSocket mSocket;
         Toast toast;
-
+        
         List<string> items;
 
         Stream mOutputStream;
@@ -50,7 +50,7 @@ namespace ArduGround
         }
         public override void OnBackPressed()
         {
-            backPress.OnBackPressed();
+            backPress.OnBackPressedAsync();
         }
         BluetoothDevice GetBluetoothDevice(string Name)
         {

@@ -21,6 +21,8 @@ namespace ArduGround
         TextView ServerAdress, UserName;
         Handler handler = new Handler();
         Toast Toast;
+
+        public static bool IsServerConnet = false;
         public static string serverUrl;
         public static Player player;
 
@@ -40,7 +42,7 @@ namespace ArduGround
         }
         public override void OnBackPressed()
         {
-            backPressCloseHandler.OnBackPressed();
+            backPressCloseHandler.OnBackPressedAsync();
         }
 
 
@@ -71,6 +73,7 @@ namespace ArduGround
                 
                 if (responseMessage.StatusCode == System.Net.HttpStatusCode.Created)
                 {
+                    IsServerConnet = true;
                     Intent intent = new Intent(this, typeof(MainActivity));
                     intent.SetFlags(ActivityFlags.NoHistory);
                     StartActivity(intent);
