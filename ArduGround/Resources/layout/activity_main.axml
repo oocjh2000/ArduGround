@@ -49,13 +49,15 @@
             android:layout_marginTop="14.6dp"
             android:layout_marginRight="10dp" />
     </LinearLayout>
-    <FrameLayout
-        android:minWidth="25px"
-        android:minHeight="25px"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/textView1"
         android:layout_weight="1"
-        android:id="@+id/frameLayout1" />
+        android:textSize="40dp"
+        android:freezesText="false"
+        android:gravity="center"
+        android:text="ArduGround" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -2561,9 +2561,6 @@ namespace ArduGround
 			// aapt resource value: 0x7f080058
 			public const int forever = 2131230808;
 			
-			// aapt resource value: 0x7f08008d
-			public const int frameLayout1 = 2131230861;
-			
 			// aapt resource value: 0x7f08000a
 			public const int ghost_view = 2131230730;
 			
@@ -2809,6 +2806,9 @@ namespace ArduGround
 			
 			// aapt resource value: 0x7f080069
 			public const int textSpacerNoTitle = 2131230825;
+			
+			// aapt resource value: 0x7f08008d
+			public const int textView1 = 2131230861;
 			
 			// aapt resource value: 0x7f08009e
 			public const int text_input_password_toggle = 2131230878;

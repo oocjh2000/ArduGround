@@ -2,9 +2,9 @@
 using Android.Widget;
 using Android.OS;
 using Android.Support.V7.App;
-using Android.Content;
 using System.Threading;
-using Java.Net;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace ArduGround
 {
@@ -13,7 +13,7 @@ namespace ArduGround
     {
         Toast toast;
 
-        
+        TextView textView;
 
         BackPressCloseHandler closeHandler;
         BackPressCloseHandler backPress;
@@ -32,9 +32,13 @@ namespace ArduGround
             FindViewById<TextView>(Resource.Id.ShowHelth).Text = Register.player.hp.ToString();
             FindViewById<TextView>(Resource.Id.ShowUsername).Text = Register.player.name;
 
+            textView = FindViewById<TextView>(Resource.Id.textView1);
+
             backPress = new BackPressCloseHandler(this);
             var mth = new Thread(new ThreadStart(RefreshThread));
+            var th = new Thread(new ThreadStart(CountThreadAsync));
             mth.Start();
+            th.Start();
 
             closeHandler = new BackPressCloseHandler(this);
 
@@ -48,6 +52,19 @@ namespace ArduGround
             while (Thread.CurrentThread.IsAlive)
             {
                 handler.Post(delegate () { FindViewById<TextView>(Resource.Id.ShowHelth).Text = Register.player.hp.ToString(); });
+                Thread.Sleep(1000);
+            }
+        }
+        async void CountThreadAsync()
+        {
+            var req = new HttpRequestMessage();
+            req.RequestUri = new System.Uri("http://" + Register.serverUrl + "/users/count");
+            var cli = new HttpClient();
+            while (Thread.CurrentThread.IsAlive)
+            {
+                HttpResponseMessage res = await cli.GetAsync(req.RequestUri);
+                string count = res.Content.ReadAsStringAsync().ToString();
+                handler.Post(delegate () { textView.Text = "생존자: " + count; });
                 Thread.Sleep(1000);
             }
         }
