@@ -85,12 +85,14 @@ namespace ArduGround
 
            
 
-               Worker = new System.Threading.Thread(new ThreadStart(async delegate () {
+               Worker = new Thread(new ThreadStart(async delegate () {
                    {
                        int buffer;
 
-                       while (System.Threading.Thread.CurrentThread.IsAlive)
+                       while (Thread.CurrentThread.IsAlive)
                        {
+                           if (!mSocket.IsConnected)
+                               mSocket.Connect();
                            if (mInputStream.IsDataAvailable())
                            {
                                buffer = mInputStream.ReadByte();
@@ -118,7 +120,7 @@ namespace ArduGround
                 StartActivity(intent);
 
             }
-            catch(System.Exception e)
+            catch(Exception e)
             {
                 toast = Toast.MakeText(this, e.Message, ToastLength.Short);
                 toast.Show();

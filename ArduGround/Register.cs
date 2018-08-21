@@ -40,6 +40,7 @@ namespace ArduGround
 
             // Create your application here
         }
+        
         public override void OnBackPressed()
         {
             backPressCloseHandler.OnBackPressedAsync();

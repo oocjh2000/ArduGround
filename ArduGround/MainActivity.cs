@@ -43,6 +43,16 @@ namespace ArduGround
             closeHandler = new BackPressCloseHandler(this);
 
         }
+        protected override async void OnDestroy()
+        {
+            if (Register.IsServerConnet)
+            {
+                var req = new HttpRequestMessage();
+                req.RequestUri = new System.Uri("http://" + Register.serverUrl + "/users/" + Register.player.id.ToString());
+                var cli = new HttpClient();
+                var res = await cli.DeleteAsync(req.RequestUri);
+            }
+        }
         public override void OnBackPressed()
         {
             backPress.OnBackPressedAsync();
