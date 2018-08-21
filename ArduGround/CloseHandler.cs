@@ -26,7 +26,13 @@ namespace ArduGround
             }
             if (JavaSystem.CurrentTimeMillis() <= BackPressedTime + 2000)
             {
-        
+                if (Register.IsServerConnet)
+                {
+                    var req = new HttpRequestMessage();
+                    req.RequestUri = new System.Uri("http://" + Register.serverUrl + "/users/" + Register.player.id.ToString());
+                    var cli = new HttpClient();
+                    var res = await cli.DeleteAsync(req.RequestUri);
+                }
                 activity.MoveTaskToBack(true);
                 activity.Finish();
                 Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
