@@ -2,17 +2,15 @@ void setup() {
   // put your setup code here, to run once:
   SerialUSB.begin(9600);
   Serial5.begin(9600);
-
+  pinMode(3, INPUT_PULLUP);
   SerialUSB.println("aaaaa");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  if (SerialUSB.available()) {
-    Serial5.write(SerialUSB.read());
+  SerialUSB.println(digitalRead(3));
+
+  if(!digitalRead(3)){
+  Serial5.write("1");
+  delay(500);
   }
-  if (Serial5.available()) {
-    SerialUSB.write(Serial5.read());
-  }
- //SerialUSB.println(analogRead(A0)) ;
 }
