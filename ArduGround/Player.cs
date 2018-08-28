@@ -18,4 +18,8 @@ namespace ArduGround
         public string name;
         public int id;
     }
+    public class Count
+    {
+        public string count;
+    }
 }

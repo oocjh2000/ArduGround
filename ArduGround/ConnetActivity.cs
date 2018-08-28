@@ -93,10 +93,10 @@ namespace ArduGround
                        {
                            if (!mSocket.IsConnected)
                                mSocket.Connect();
-                           if (mInputStream.IsDataAvailable())
+                           if (mInputStream.IsDataAvailable() && Register.IsServerConnet)
                            {
                                buffer = mInputStream.ReadByte();
-                               Register.player.hp--;
+                               Register.player.hp -= 10;
                                HttpRequestMessage httpRequestMessage = new HttpRequestMessage();
                                httpRequestMessage.RequestUri = new Uri("http://" + Register.serverUrl + "/users/" + Register.player.id.ToString());
                                var content = new StringContent(JsonConvert.SerializeObject(Register.player), Encoding.UTF8, "application/json");
