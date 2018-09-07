@@ -19,7 +19,7 @@ namespace ArduGround
     {
         
         ICollection<BluetoothDevice> mDevice;
-        System.Threading.Thread Worker;
+        Thread Worker;
         ListView listView;
         Button SearchButton;
 
@@ -97,12 +97,15 @@ namespace ArduGround
                            {
                                buffer = mInputStream.ReadByte();
                                Register.player.hp -= 10;
+
                                HttpRequestMessage httpRequestMessage = new HttpRequestMessage();
                                httpRequestMessage.RequestUri = new Uri("http://" + Register.serverUrl + "/users/" + Register.player.id.ToString());
                                var content = new StringContent(JsonConvert.SerializeObject(Register.player), Encoding.UTF8, "application/json");
                                httpRequestMessage.Content = content;
+
                                HttpClient client = new HttpClient();
                                HttpResponseMessage responseMessage = await client.PutAsync(httpRequestMessage.RequestUri, httpRequestMessage.Content);
+
                                Register.player = JsonConvert.DeserializeObject<Player>(await responseMessage.Content.ReadAsStringAsync());
                                httpRequestMessage.Method = HttpMethod.Put;
                                Thread.Sleep(500);
@@ -164,5 +167,9 @@ namespace ArduGround
             }
             
         }
+
+
+
+
     }//클래스
 }//네임스페이스
